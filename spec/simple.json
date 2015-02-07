@@ -1,0 +1,7 @@
+{
+    "servers": [
+        { "name": "Web" },
+        { "name": "App" },
+        { "name": "DB"  }
+    ]
+}

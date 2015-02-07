@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'network_drawer'
+
+NetworkDrawer::Cli.start(ARGV)
