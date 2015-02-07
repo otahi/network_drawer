@@ -22,7 +22,7 @@ Or install it yourself as:
 
 You can draw a network diagram:
 
-    $ bundle exec network_drawer -j mynetwork.json
+    $ bundle exec network_drawer draw mynetwork.json
 
 Then You will get a network diagram.
 
