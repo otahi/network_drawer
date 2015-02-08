@@ -1,0 +1,11 @@
+{
+    "servers": [
+        { "name": "Web", "ports": ["80/tcp", "25/tcp"] },
+        { "name": "App", "ports": ["80/tcp"] },
+        { "name": "DB", "ports": ["3306/tcp"]  }
+    ],
+    "connections": [
+        { "from": "Web", "to": "App:80/tcp" },
+        { "from": "App", "to": "DB:3306/tcp" }
+    ]
+}
