@@ -1,0 +1,8 @@
+digraph G {
+  rankdir="TB";
+  0[label="{<p80tcp> 80/tcp|<p25tcp> 25/tcp}| Web",shape="record"];
+  1[label="{<p80tcp> 80/tcp}| App",shape="record"];
+  2[label="{<p3306tcp> 3306/tcp}| DB",shape="record"];
+  0 -> 1:p80tcp;
+  1 -> 2:p3306tcp;
+}

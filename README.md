@@ -22,11 +22,11 @@ Or install it yourself as:
 
 You can draw a network diagram:
 
-    $ bundle exec network_drawer draw mynetwork.json
+    $ bundle exec network_drawer draw examples/simple.json
 
 Then You will get a network diagram.
 
-TBD.
+![diagram](examples/simple.svg)
 
 ## Contributing
 
