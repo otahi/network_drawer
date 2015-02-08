@@ -10,6 +10,10 @@ module NetworkDrawer
         gv.node s['name'].to_sym, shape: 'box'
       end
 
+      source['communication'].each do |c|
+        gv.edge "#{c['from']}_#{c['to']}".to_sym
+      end
+
       gv.save dest_file, :svg
     end
   end
