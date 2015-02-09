@@ -7,13 +7,16 @@ module NetworkDrawer
       gv = Gviz.new
 
       nodes = {}
+      layers = source['layers'] ? source['layers'] : []
 
       gv.global(rankdir: 'TB')
       source['servers'].each_with_index do |s, i|
         id = "#{i}".to_sym
         name = s['name']
         ports = s['ports']
+        layer = s['layer'] ? s['layer'] : :default
         label = ''
+        layers << layer unless layers.include?(layer)
 
         if ports
           label << '{'
@@ -24,16 +27,23 @@ module NetworkDrawer
           label << '}'
         end
         label << "| #{name}"
-        nodes.merge!(name => id)
+        nodes.merge!(name => { id: id, layer: layer })
         gv.node id, label: label, shape: 'record'
+      end
+
+      layers.each do |l|
+        l_nodes = nodes.select { |_, v| v[:layer] == l }
+        l_ids = []
+        l_nodes.each_value { |v| l_ids << v[:id] }
+        gv.rank :same, l_ids
       end
 
       source['connections'].each do |c|
         from_name, from_port  = c['from'].to_s.split(':')
         to_name, to_port = c['to'].to_s.split(':')
 
-        from_id = nodes[from_name]
-        to_id = nodes[to_name]
+        from_id = nodes[from_name][:id]
+        to_id = nodes[to_name][:id]
 
         from = from_port ? "#{from_id}:p#{from_port}" : from_id
         to = to_port ? "#{to_id}:p#{to_port}" : to_id
