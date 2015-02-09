@@ -15,19 +15,19 @@ module NetworkDrawer
         name = s['name']
         ports = s['ports']
         layer = s['layer'] ? s['layer'] : :default
-        label = ''
+        label = '<table>'
         layers << layer unless layers.include?(layer)
 
         if ports
-          label << '{'
+          label << '<tr>'
           ports.each_with_index do |p, j|
-            label << "<p#{p.gsub('/', '')}> #{p}"
-            label << '|' unless j == (ports.size - 1)
+            label << "<td port=\"p#{p.gsub('/', '')}\"> #{p} </td>"
           end
-          label << '}'
+          label << '</tr>'
         end
-        label << "| #{name}"
+        label << "<tr><td colspan=\"#{ports.size}\">#{name}</td></tr>"
         nodes.merge!(name => { id: id, label: label, ports: ports, layer: layer })
+        label << '</table>'
       end
 
       layers.each do |l|
@@ -35,7 +35,7 @@ module NetworkDrawer
         gv.subgraph do
           global label: l
           l_nodes.each_value do |n|
-            node n[:id], label: n[:label], shape: 'record'
+            node n[:id], label: n[:label], shape: 'plaintext'
           end
         end
       end
