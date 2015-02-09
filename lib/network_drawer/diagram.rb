@@ -4,7 +4,7 @@ module NetworkDrawer
   # Replesent of source file
   class Diagram
     def self.draw(source, dest_file)
-      gv = Gviz.new
+      gv = Gviz.new(File.basename(dest_file, '.*'))
 
       nodes = {}
       layers = source['layers'] ? source['layers'] : []
