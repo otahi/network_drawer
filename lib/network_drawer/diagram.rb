@@ -10,7 +10,7 @@ module NetworkDrawer
       layers = source['layers'] ? source['layers'] : []
 
       gv.global(rankdir: 'TB')
-      source['servers'].each_with_index do |s, i|
+      source['nodes'].each_with_index do |s, i|
         id = "#{i}".to_sym
         name = s['name']
         ports = s['ports']
