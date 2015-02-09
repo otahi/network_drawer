@@ -27,15 +27,17 @@ module NetworkDrawer
           label << '}'
         end
         label << "| #{name}"
-        nodes.merge!(name => { id: id, layer: layer })
-        gv.node id, label: label, shape: 'record'
+        nodes.merge!(name => { id: id, label: label, ports: ports, layer: layer })
       end
 
       layers.each do |l|
         l_nodes = nodes.select { |_, v| v[:layer] == l }
-        l_ids = []
-        l_nodes.each_value { |v| l_ids << v[:id] }
-        gv.rank :same, l_ids
+        gv.subgraph do
+          global label: l
+          l_nodes.each_value do |n|
+            node n[:id], label: n[:label], shape: 'record'
+          end
+        end
       end
 
       source['connections'].each do |c|
