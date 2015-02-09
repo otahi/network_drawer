@@ -1,17 +1,29 @@
-digraph G {
+digraph simple {
+  subgraph cluster0 {
+    label="Web";
+    0[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web001</td></tr></table>>,shape="plaintext"];
+    1[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web002</td></tr></table>>,shape="plaintext"];
+    2[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web003</td></tr></table>>,shape="plaintext"];
+  }
+  subgraph cluster1 {
+    label="App";
+    3[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p25tcp"> 25/tcp</td></tr><tr><td colspan="2">App001</td></tr></table>>,shape="plaintext"];
+    4[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p25tcp"> 25/tcp</td></tr><tr><td colspan="2">App002</td></tr></table>>,shape="plaintext"];
+  }
+  subgraph cluster2 {
+    label="DB";
+    5[label=<<table><tr><td port="p3306tcp"> 3306/tcp</td></tr><tr><td colspan="1">DB001</td></tr></table>>,shape="plaintext"];
+  }
   rankdir="TB";
-  0[label="{<p80tcp> 80/tcp}| Web001",shape="record"];
-  1[label="{<p80tcp> 80/tcp}| Web002",shape="record"];
-  2[label="{<p80tcp> 80/tcp}| Web003",shape="record"];
-  3[label="{<p80tcp> 80/tcp|<p25tcp> 25/tcp}| App001",shape="record"];
-  4[label="{<p80tcp> 80/tcp|<p25tcp> 25/tcp}| App002",shape="record"];
-  5[label="{<p3306tcp> 3306/tcp}| DB001",shape="record"];
+  0;
+  3;
+  1;
+  4;
+  2;
+  5;
   0 -> 3:p80tcp;
   1 -> 4:p80tcp;
   2 -> 4:p80tcp;
   3 -> 5:p3306tcp;
   4 -> 5:p3306tcp;
-  { rank=same; 0; 1; 2; }
-  { rank=same; 3; 4; }
-  { rank=same; 5; }
 }
