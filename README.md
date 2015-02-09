@@ -26,7 +26,7 @@ You can draw a network diagram:
 
 Then You will get a network diagram.
 
-![diagram](examples/simple.svg)
+[sample diagram](examples/simple.svg)
 
 ## Contributing
 
