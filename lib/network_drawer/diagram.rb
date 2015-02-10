@@ -16,14 +16,14 @@ module NetworkDrawer
       gv = Gviz.new(File.basename(@dest_file, '.*'))
 
       nodes = {}
-      layers = @source['layers'] ? @source['layers'] : []
+      layers = @source[:layers] ? @source[:layers] : []
 
       gv.global(rankdir: 'TB')
-      @source['nodes'].each_with_index do |s, i|
+      @source[:nodes].each_with_index do |s, i|
         id = "#{i}".to_sym
-        name = s['name']
-        ports = s['ports']
-        layer = s['layer'] ? s['layer'] : :default
+        name = s[:name]
+        ports = s[:ports]
+        layer = s[:layer] ? s[:layer] : :default
         label = '<table>'
         layers << layer unless layers.include?(layer)
 
@@ -49,9 +49,9 @@ module NetworkDrawer
         end
       end
 
-      @source['connections'].each do |c|
-        from_name, from_port  = c['from'].to_s.split(':')
-        to_name, to_port = c['to'].to_s.split(':')
+      @source[:connections].each do |c|
+        from_name, from_port  = c[:from].to_s.split(':')
+        to_name, to_port = c[:to].to_s.split(':')
 
         from_id = nodes[from_name][:id]
         to_id = nodes[to_name][:id]
