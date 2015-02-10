@@ -3,13 +3,17 @@ require 'gviz'
 module NetworkDrawer
   # Replesent of source file
   class Diagram
-    def self.draw(source, dest_file)
-      new(source, dest_file).draw
+    DEFAULT_OPTIONS = {}
+
+    def self.draw(source, dest_file, options = {})
+      dia = new(source, dest_file, options)
+      dia.draw
     end
 
-    def initialize(source, dest_file)
+    def initialize(source, dest_file, options)
       @source = source
       @dest_file = dest_file
+      @options = DEFAULT_OPTIONS.merge(options)
     end
 
     def draw
