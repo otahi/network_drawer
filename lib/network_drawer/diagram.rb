@@ -10,28 +10,37 @@ module NetworkDrawer
       dia.draw
     end
 
-    def initialize(source, dest_file, options)
+    def initialize(source, dest_file, options = {})
       @source = source
       @dest_file = dest_file
       @options = DEFAULT_OPTIONS.merge(options)
       @title = @options[:title] ? @options[:title] :
         File.basename(@dest_file, '.*')
+      @nodes = {}
+      @layers = []
+      @gv = Gviz.new(@title)
     end
 
     def draw
-      gv = Gviz.new(@title)
+      @gv.global(rankdir: 'TB')
 
-      nodes = {}
-      layers = @source[:layers] ? @source[:layers] : []
+      create_nodes
+      create_layers
+      create_connections
 
-      gv.global(rankdir: 'TB')
+      @gv.save @dest_file, :svg
+    end
+
+    private
+
+    def create_nodes
       @source[:nodes].each_with_index do |s, i|
         id = "#{i}".to_sym
         name = s[:name]
         ports = s[:ports]
         layer = s[:layer] ? s[:layer] : :default
         label = '<table>'
-        layers << layer unless layers.include?(layer)
+        @layers << layer unless @layers.include?(layer)
 
         if ports
           label << '<tr>'
@@ -41,33 +50,39 @@ module NetworkDrawer
           label << '</tr>'
         end
         label << "<tr><td colspan=\"#{ports.size}\">#{name}</td></tr>"
-        nodes.merge!(name => { id: id, label: label, ports: ports, layer: layer })
+        @nodes.merge!(name =>
+          { id: id, label: label, ports: ports, layer: layer })
         label << '</table>'
       end
+    end
 
-      layers.each do |l|
-        l_nodes = nodes.select { |_, v| v[:layer] == l }
-        gv.subgraph do
+    def create_layers
+      @layers = @layers + @source[:layers] if @source[:layers]
+
+      @layers.each do |l|
+        l_nodes = @nodes.select { |_, v| v[:layer] == l }
+        @gv.subgraph do
           global label: l
           l_nodes.each_value do |n|
             node n[:id], label: n[:label], shape: 'plaintext'
           end
         end
       end
+    end
 
+    def create_connections
       @source[:connections].each do |c|
         from_name, from_port  = c[:from].to_s.split(':')
         to_name, to_port = c[:to].to_s.split(':')
 
-        from_id = nodes[from_name][:id]
-        to_id = nodes[to_name][:id]
+        from_id = @nodes[from_name][:id]
+        to_id = @nodes[to_name][:id]
 
         from = from_port ? "#{from_id}:p#{from_port}" : from_id
         to = to_port ? "#{to_id}:p#{to_port}" : to_id
 
-        gv.edge "#{from}_#{to}".gsub('/', '').to_sym
+        @gv.edge "#{from}_#{to}".gsub('/', '').to_sym
       end
-      gv.save @dest_file, :svg
     end
   end
 end
