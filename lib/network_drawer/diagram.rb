@@ -4,13 +4,22 @@ module NetworkDrawer
   # Replesent of source file
   class Diagram
     def self.draw(source, dest_file)
-      gv = Gviz.new(File.basename(dest_file, '.*'))
+      new(source, dest_file).draw
+    end
+
+    def initialize(source, dest_file)
+      @source = source
+      @dest_file = dest_file
+    end
+
+    def draw
+      gv = Gviz.new(File.basename(@dest_file, '.*'))
 
       nodes = {}
-      layers = source['layers'] ? source['layers'] : []
+      layers = @source['layers'] ? @source['layers'] : []
 
       gv.global(rankdir: 'TB')
-      source['nodes'].each_with_index do |s, i|
+      @source['nodes'].each_with_index do |s, i|
         id = "#{i}".to_sym
         name = s['name']
         ports = s['ports']
@@ -40,7 +49,7 @@ module NetworkDrawer
         end
       end
 
-      source['connections'].each do |c|
+      @source['connections'].each do |c|
         from_name, from_port  = c['from'].to_s.split(':')
         to_name, to_port = c['to'].to_s.split(':')
 
@@ -52,7 +61,7 @@ module NetworkDrawer
 
         gv.edge "#{from}_#{to}".gsub('/', '').to_sym
       end
-      gv.save dest_file, :svg
+      gv.save @dest_file, :svg
     end
   end
 end
