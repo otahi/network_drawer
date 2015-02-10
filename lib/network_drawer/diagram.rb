@@ -14,10 +14,12 @@ module NetworkDrawer
       @source = source
       @dest_file = dest_file
       @options = DEFAULT_OPTIONS.merge(options)
+      @title = @options[:title] ? @options[:title] :
+        File.basename(@dest_file, '.*')
     end
 
     def draw
-      gv = Gviz.new(File.basename(@dest_file, '.*'))
+      gv = Gviz.new(@title)
 
       nodes = {}
       layers = @source[:layers] ? @source[:layers] : []
