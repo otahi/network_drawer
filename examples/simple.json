@@ -1,12 +1,26 @@
 {
-    "layers": [ "Web", "App", "DB" ],
+    "layers": {
+        "Web": {
+            "nodes": [
+                { "Web001": { "ports": ["80/tcp"] } },
+                { "Web002": { "ports": ["80/tcp"] } },
+                { "Web003": { "ports": ["80/tcp"] } }
+            ]
+        },
+        "App": {
+            "nodes": [
+                { "App001": { "ports": ["80/tcp", "25/tcp"] } },
+                { "App002": { "ports": ["80/tcp", "25/tcp"] } }
+            ]
+        },
+        "DB": {
+            "nodes": [
+                { "DB001": { "ports": ["3306/tcp"] } }
+            ]
+        }
+    },
     "nodes": [
-        { "name": "Web001", "ports": ["80/tcp"], "layer": "Web" },
-        { "name": "Web002", "ports": ["80/tcp"], "layer": "Web" },
-        { "name": "Web003", "ports": ["80/tcp"], "layer": "Web" },
-        { "name": "App001", "ports": ["80/tcp", "25/tcp"], "layer": "App" },
-        { "name": "App002", "ports": ["80/tcp", "25/tcp"], "layer": "App" },
-        { "name": "DB001", "ports": ["3306/tcp"], "layer": "DB" }
+        { "Router": {} }
     ],
     "connections": [
         { "from": "Web001", "to": "App001:80/tcp" },
