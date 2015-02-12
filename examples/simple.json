@@ -2,6 +2,7 @@
     "layers": {
         "Web": {
             "nodes": [
+                { "WebLB":  { "ports": ["80/tcp", "443/tcp"] } },
                 { "Web001": { "ports": ["80/tcp"] } },
                 { "Web002": { "ports": ["80/tcp"] } },
                 { "Web003": { "ports": ["80/tcp"] } }
@@ -9,8 +10,9 @@
         },
         "App": {
             "nodes": [
-                { "App001": { "ports": ["80/tcp", "25/tcp"] } },
-                { "App002": { "ports": ["80/tcp", "25/tcp"] } }
+                { "AppLB":  { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } },
+                { "App001": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } },
+                { "App002": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } }
             ]
         },
         "DB": {
@@ -20,12 +22,29 @@
         }
     },
     "nodes": [
-        { "Router": {} }
+        { "Browser": {} },
+        { "Mail Server": {} }
     ],
     "connections": [
-        { "from": "Web001", "to": "App001:80/tcp" },
-        { "from": "Web002", "to": "App002:80/tcp" },
-        { "from": "Web003", "to": "App002:80/tcp" },
+        { "from": "Browser", "to": "WebLB:80/tcp" },
+        { "from": "Browser", "to": "WebLB:443/tcp" },
+        { "from": "Mail Server", "to": "AppLB:25/tcp" },
+        { "from": "WebLB", "to": "Web001:80/tcp" },
+        { "from": "WebLB", "to": "Web002:80/tcp" },
+        { "from": "WebLB", "to": "Web003:80/tcp" },
+        { "from": "Web001", "to": "AppLB:80/tcp" },
+        { "from": "Web002", "to": "AppLB:80/tcp" },
+        { "from": "Web001", "to": "AppLB:8080/tcp" },
+        { "from": "Web002", "to": "AppLB:8080/tcp" },
+        { "from": "Web003", "to": "AppLB:80/tcp" },
+        { "from": "App001", "to": "AppLB:8080/tcp" },
+        { "from": "App002", "to": "AppLB:8080/tcp" },
+        { "from": "AppLB", "to": "App001:25/tcp" },
+        { "from": "AppLB", "to": "App001:80/tcp" },
+        { "from": "AppLB", "to": "App001:8080/tcp" },
+        { "from": "AppLB", "to": "App002:25/tcp" },
+        { "from": "AppLB", "to": "App002:80/tcp" },
+        { "from": "AppLB", "to": "App002:8080/tcp" },
         { "from": "App001", "to": "DB001:3306/tcp" },
         { "from": "App002", "to": "DB001:3306/tcp" }
     ]
