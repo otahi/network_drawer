@@ -41,6 +41,7 @@ module NetworkDrawer
     end
 
     def create_nodes(nodes, layer = nil)
+      return if nodes.nil?
       nodes.reverse.each_with_index do |s, i|
         id = "#{@nodes.size + 1}".to_sym
         name = s.keys.first
