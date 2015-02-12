@@ -74,6 +74,8 @@ module NetworkDrawer
     end
 
     def create_connections
+      return if @source[:connections].nil?
+      seq = 0
       @source[:connections].each do |c|
         from_name, from_port  = c[:from].to_s.split(':')
         to_name, to_port = c[:to].to_s.split(':')
@@ -84,7 +86,8 @@ module NetworkDrawer
         from = from_port ? "#{from_id}:p#{from_port}" : from_id
         to = to_port ? "#{to_id}:p#{to_port}" : to_id
 
-        @gv.edge "#{from}_#{to}".gsub('/', '').to_sym
+        @gv.edge "#{from}_#{to}_#{seq}".gsub('/', '').to_sym
+        seq += 1
       end
     end
   end
