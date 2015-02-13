@@ -46,19 +46,7 @@ module NetworkDrawer
         id = "#{@nodes.size + 1}".to_sym
         name = s.keys.first
         ports = s[name][:ports] ? s[name][:ports] : []
-        label = '<table>'
-
-        if ports.empty?
-          label << "<tr><td>#{name}</td></tr>"
-        else
-          label << '<tr>'
-          ports.each_with_index do |p, j|
-            label << "<td port=\"p#{p.gsub('/', '')}\"> #{p} </td>"
-          end
-          label << '</tr>'
-          label << "<tr><td colspan=\"#{ports.size}\">#{name}</td></tr>"
-        end
-        label << '</table>'
+        label = build_node_label(name: name, ports: ports)
         @nodes.merge!(name =>
           { id: id, label: label, ports: ports, layer: layer })
 
@@ -71,6 +59,20 @@ module NetworkDrawer
           @gv.node id, label: label, shape: 'plaintext'
         end
       end
+    end
+
+    def build_node_label(opt = {})
+      if opt[:ports].empty?
+        label = "<tr><td>#{opt[:name]}</td></tr>"
+      else
+        label = '<tr>'
+        opt[:ports].each_with_index do |p, j|
+          label << "<td port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+        end
+        label << '</tr>'
+        label << "<tr><td colspan=\"#{opt[:ports].size}\">#{opt[:name]}</td></tr>"
+      end
+      "<table>#{label}</table>"
     end
 
     def create_connections
