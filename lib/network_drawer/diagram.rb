@@ -39,6 +39,7 @@ module NetworkDrawer
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
         node_style = { label: t[:label], shape: 'plaintext' }
+        node_style = override_node_style(node_style, {})
         @gv.node(t[:id], node_style)
       end
 
@@ -46,6 +47,7 @@ module NetworkDrawer
         layer_name = n
         l.each_value do |v|
           node_style = { label: v[:label], shape: 'plaintext' }
+          node_style = override_node_style(node_style, {})
           @gv.subgraph "cluster_#{layer_name}" do
             global label: layer_name
             global(DEFAULT_STYLE)
@@ -89,6 +91,12 @@ module NetworkDrawer
         label << "<tr><td colspan=\"#{opt[:ports].size}\">#{opt[:name]}</td></tr>"
       end
       "<table>#{label}</table>"
+    end
+
+    def override_node_style(default, options)
+      return DEFAULT_NODE_STYLE unless default
+      return default unless options
+      DEFAULT_NODE_STYLE.merge(default).merge(options)
     end
 
     def create_connections
