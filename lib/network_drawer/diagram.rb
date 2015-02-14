@@ -4,6 +4,7 @@ module NetworkDrawer
   # Replesent of source file
   class Diagram
     DEFAULT_OPTIONS = {}
+    TOP_LAYER = :networkdrawertop
 
     def self.draw(source, dest_file, options = {})
       dia = new(source, dest_file, options)
@@ -33,13 +34,13 @@ module NetworkDrawer
     private
 
     def create_nodes
-      built_nodes = build_nodes({ nil => @source })
-      built_nodes[nil].each_value do |t|
+      built_nodes = build_nodes(TOP_LAYER => @source)
+      built_nodes[TOP_LAYER].each_value do |t|
         @gv.node t[:id], label: t[:label], shape: 'plaintext'
       end
 
-      built_nodes[:layers].each_value do |l|
-        layer_name = l.keys.first
+      built_nodes[:layers].each_pair do |n, l|
+        layer_name = n
         @gv.subgraph "cluster_#{layer_name}" do
           global label: layer_name
           l.each_value do |v|
@@ -65,7 +66,7 @@ module NetworkDrawer
 
       layers = layer[layer_name][:layers]
       built_layers = {}
-      layers.each_pair do |k,v|
+      layers.each_pair do |k, v|
         built_layers.merge!(build_nodes(k => v))
       end if layers
       built_nodes = { layer_name => built_nodes, layers: built_layers }
