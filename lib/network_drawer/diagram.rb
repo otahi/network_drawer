@@ -24,8 +24,7 @@ module NetworkDrawer
     def draw
       @gv.global(rankdir: 'TB')
 
-      create_layers
-      create_nodes(@source[:nodes])
+      create_nodes
       create_connections
 
       @gv.save @dest_file, :svg
@@ -33,32 +32,43 @@ module NetworkDrawer
 
     private
 
-    def create_layers
-      @layers.merge!(@source[:layers]) if @source[:layers]
-      @layers.each_pair do |l, n|
-        create_nodes(n[:nodes], l)
+    def create_nodes
+      built_nodes = build_nodes({ nil => @source })
+      built_nodes[nil].each_value do |t|
+        @gv.node t[:id], label: t[:label], shape: 'plaintext'
+      end
+
+      built_nodes[:layers].each_value do |l|
+        layer_name = l.keys.first
+        @gv.subgraph "cluster_#{layer_name}" do
+          global label: layer_name
+          l.each_value do |v|
+            node v[:id], label: v[:label], shape: 'plaintext'
+          end
+        end
       end
     end
 
-    def create_nodes(nodes, layer = nil)
-      return if nodes.nil?
+    def build_nodes(layer)
+      layer_name = layer.keys.first
+      nodes = layer[layer_name][:nodes]
+      built_nodes = {}
       nodes.reverse.each_with_index do |s, i|
         id = "#{@nodes.size + 1}".to_sym
         name = s.keys.first
         ports = s[name][:ports] ? s[name][:ports] : []
         label = build_node_label(name: name, ports: ports)
-        @nodes.merge!(name =>
-          { id: id, label: label, ports: ports, layer: layer })
+        node = { id: id, label: label, ports: ports }
+        built_nodes.merge!(name => node)
+        @nodes.merge!(name => node)
+      end if nodes
 
-        if layer
-          @gv.subgraph "cluster_#{layer}"do
-            global label: layer
-            node id, label: label, shape: 'plaintext'
-          end
-        else
-          @gv.node id, label: label, shape: 'plaintext'
-        end
-      end
+      layers = layer[layer_name][:layers]
+      built_layers = {}
+      layers.each_pair do |k,v|
+        built_layers.merge!(build_nodes(k => v))
+      end if layers
+      built_nodes = { layer_name => built_nodes, layers: built_layers }
     end
 
     def build_node_label(opt = {})
@@ -81,7 +91,6 @@ module NetworkDrawer
       @source[:connections].each do |c|
         from_name, from_port  = c[:from].to_s.split(':')
         to_name, to_port = c[:to].to_s.split(':')
-
         from_id = @nodes[from_name.to_sym][:id]
         to_id = @nodes[to_name.to_sym][:id]
 
