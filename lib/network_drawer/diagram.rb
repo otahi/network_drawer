@@ -3,8 +3,10 @@ require 'gviz'
 module NetworkDrawer
   # Replesent of source file
   class Diagram
-    DEFAULT_OPTIONS = {}
     TOP_LAYER = :networkdrawertop
+    DEFAULT_OPTIONS = {}
+    DEFAULT_STYLE = { fontname: 'Helvetica' }
+    DEFAULT_NODE_STYLE = { fontname: 'Helvetica' }
 
     def self.draw(source, dest_file, options = {})
       dia = new(source, dest_file, options)
@@ -24,7 +26,7 @@ module NetworkDrawer
 
     def draw
       @gv.global(rankdir: 'TB')
-
+      @gv.global(DEFAULT_STYLE)
       create_nodes
       create_connections
 
@@ -36,15 +38,18 @@ module NetworkDrawer
     def create_nodes
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
-        @gv.node t[:id], label: t[:label], shape: 'plaintext'
+        node_style = { label: t[:label], shape: 'plaintext' }
+        @gv.node(t[:id], node_style)
       end
 
       built_nodes[:layers].each_pair do |n, l|
         layer_name = n
-        @gv.subgraph "cluster_#{layer_name}" do
-          global label: layer_name
-          l.each_value do |v|
-            node v[:id], label: v[:label], shape: 'plaintext'
+        l.each_value do |v|
+          node_style = { label: v[:label], shape: 'plaintext' }
+          @gv.subgraph "cluster_#{layer_name}" do
+            global label: layer_name
+            global(DEFAULT_STYLE)
+            node(v[:id], node_style)
           end
         end
       end
