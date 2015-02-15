@@ -1,66 +1,75 @@
 digraph simple {
-  subgraph cluster_Web {
+  subgraph cluster1 {
     label="Web";
-    1[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web003</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    3[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td></tr><tr><td colspan="1">Web003</td></tr></table>>,shape="plaintext"];
   }
-  subgraph cluster_Web {
+  subgraph cluster1 {
     label="Web";
-    2[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web002</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    4[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td></tr><tr><td colspan="1">Web002</td></tr></table>>,shape="plaintext"];
   }
-  subgraph cluster_Web {
+  subgraph cluster1 {
     label="Web";
-    3[label=<<table><tr><td port="p80tcp"> 80/tcp</td></tr><tr><td colspan="1">Web001</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    5[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td></tr><tr><td colspan="1">Web001</td></tr></table>>,shape="plaintext"];
   }
-  subgraph cluster_Web {
+  subgraph cluster1 {
     label="Web";
-    4[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p443tcp"> 443/tcp</td></tr><tr><td colspan="2">WebLB</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    6[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td><td port="p443tcp">443/tcp</td></tr><tr><td colspan="2">WebLB</td></tr></table>>,shape="plaintext",color="blue"];
   }
-  subgraph cluster_App {
+  subgraph cluster3 {
     label="App";
-    5[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p8080tcp"> 8080/tcp</td><td port="p25tcp"> 25/tcp</td></tr><tr><td colspan="3">App002</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    7[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td><td port="p8080tcp">8080/tcp</td><td port="p25tcp">25/tcp</td></tr><tr><td colspan="3">App002</td></tr></table>>,shape="plaintext"];
   }
-  subgraph cluster_App {
+  subgraph cluster3 {
     label="App";
-    6[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p8080tcp"> 8080/tcp</td><td port="p25tcp"> 25/tcp</td></tr><tr><td colspan="3">App001</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    8[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td><td port="p8080tcp">8080/tcp</td><td port="p25tcp">25/tcp</td></tr><tr><td colspan="3">App001</td></tr></table>>,shape="plaintext"];
   }
-  subgraph cluster_App {
+  subgraph cluster3 {
     label="App";
-    7[label=<<table><tr><td port="p80tcp"> 80/tcp</td><td port="p8080tcp"> 8080/tcp</td><td port="p25tcp"> 25/tcp</td></tr><tr><td colspan="3">AppLB</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    9[fontname="Helvetica",label=<<table><tr><td port="p80tcp">80/tcp</td><td port="p8080tcp">8080/tcp</td><td port="p25tcp">25/tcp</td></tr><tr><td colspan="3">AppLB</td></tr></table>>,shape="plaintext",color="blue"];
   }
-  subgraph cluster_DB {
+  subgraph cluster4 {
     label="DB";
-    8[label=<<table><tr><td port="p3306tcp"> 3306/tcp</td></tr><tr><td colspan="1">DB001</td></tr></table>>,shape="plaintext"];
+    fontname="Helvetica";
+    10[fontname="Helvetica",label=<<table><tr><td port="p3306tcp">3306/tcp</td></tr><tr><td colspan="1">DB001</td></tr></table>>,shape="plaintext"];
   }
   rankdir="TB";
-  9[label=<<table><tr><td>Mail Server</td></tr></table>>,shape="plaintext"];
-  10[label=<<table><tr><td>Browser</td></tr></table>>,shape="plaintext"];
-  4;
-  7;
-  3;
-  2;
-  1;
+  fontname="Helvetica";
+  1[fontname="Helvetica",label=<<table><tr><td>Mail Server</td></tr></table>>,shape="plaintext"];
+  2[fontname="Helvetica",label=<<table><tr><td>Browser</td></tr></table>>,shape="plaintext"];
   6;
+  9;
   5;
+  4;
+  3;
   8;
-  10 -> 4:p80tcp;
-  10 -> 4:p443tcp;
+  7;
+  10;
+  2 -> 6:p80tcp;
+  2 -> 6:p443tcp;
+  1 -> 9:p25tcp;
+  6 -> 5:p80tcp;
+  6 -> 4:p80tcp;
+  6 -> 3:p80tcp;
+  5 -> 9:p80tcp;
+  4 -> 9:p80tcp;
+  5 -> 9:p8080tcp;
+  4 -> 9:p8080tcp;
+  3 -> 9:p80tcp;
+  8 -> 9:p8080tcp;
+  7 -> 9:p8080tcp;
+  9 -> 8:p25tcp;
+  9 -> 8:p80tcp;
+  9 -> 8:p8080tcp;
   9 -> 7:p25tcp;
-  4 -> 3:p80tcp;
-  4 -> 2:p80tcp;
-  4 -> 1:p80tcp;
-  3 -> 7:p80tcp;
-  2 -> 7:p80tcp;
-  3 -> 7:p8080tcp;
-  2 -> 7:p8080tcp;
-  1 -> 7:p80tcp;
-  6 -> 7:p8080tcp;
-  5 -> 7:p8080tcp;
-  7 -> 6:p25tcp;
-  7 -> 6:p80tcp;
-  7 -> 6:p8080tcp;
-  7 -> 5:p25tcp;
-  7 -> 5:p80tcp;
-  7 -> 5:p8080tcp;
-  6 -> 8:p3306tcp;
-  5 -> 8:p3306tcp;
+  9 -> 7:p80tcp;
+  9 -> 7:p8080tcp;
+  8 -> 10:p3306tcp;
+  7 -> 10:p3306tcp;
 }

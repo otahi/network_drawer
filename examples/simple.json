@@ -2,7 +2,7 @@
     "layers": {
         "Web": {
             "nodes": [
-                { "WebLB":  { "ports": ["80/tcp", "443/tcp"] } },
+                { "WebLB":  { "ports": ["80/tcp", "443/tcp"], "type": "LB" } },
                 { "Web001": { "ports": ["80/tcp"] } },
                 { "Web002": { "ports": ["80/tcp"] } },
                 { "Web003": { "ports": ["80/tcp"] } }
@@ -10,7 +10,7 @@
         },
         "App": {
             "nodes": [
-                { "AppLB":  { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } },
+                { "AppLB":  { "ports": ["80/tcp", "8080/tcp", "25/tcp"], "type": "LB" } },
                 { "App001": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } },
                 { "App002": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } }
             ]
@@ -22,8 +22,8 @@
         }
     },
     "nodes": [
-        { "Browser": {} },
-        { "Mail Server": {} }
+        { "Browser": {}, "type": "Client" },
+        { "Mail Server": {}, "type": "Client" }
     ],
     "connections": [
         { "from": "Browser", "to": "WebLB:80/tcp" },
