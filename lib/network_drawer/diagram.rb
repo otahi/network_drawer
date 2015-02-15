@@ -21,6 +21,7 @@ module NetworkDrawer
         File.basename(@dest_file, '.*')
       @nodes = {}
       @layers = {}
+      @style = options[:style]
       @gv = Gviz.new(@title)
     end
 
@@ -38,8 +39,8 @@ module NetworkDrawer
     def create_nodes
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
-        node_style = { label: t[:label], shape: 'plaintext' }
-        node_style = override_node_style(node_style, {})
+        node_style = DEFAULT_STYLE.merge( label: t[:label], shape: 'plaintext')
+        node_style = override_node_style(node_style, @style[:types][t[:type]])
         @gv.node(t[:id], node_style)
       end
 
@@ -48,8 +49,8 @@ module NetworkDrawer
         id = "#{@layers.size + 1}".to_sym
         @layers.merge!(layer_name => id)
         l.each_value do |v|
-          node_style = { label: v[:label], shape: 'plaintext' }
-          node_style = override_node_style(node_style, {})
+          node_style = DEFAULT_STYLE.merge( label: v[:label], shape: 'plaintext')
+          node_style = override_node_style(node_style, @style[:types][v[:type]])
           @gv.subgraph "cluster#{id}" do
             global label: layer_name
             global(DEFAULT_STYLE)
@@ -68,7 +69,8 @@ module NetworkDrawer
         name = s.keys.first
         ports = s[name][:ports] ? s[name][:ports] : []
         label = build_node_label(name: name, ports: ports)
-        node = { id: id, label: label, ports: ports }
+        type = s[name][:type] ? s[name][:type].to_sym : nil
+        node = { id: id, label: label, ports: ports, type: type }
         built_nodes.merge!(name => node)
         @nodes.merge!(name => node)
       end if nodes
