@@ -45,10 +45,12 @@ module NetworkDrawer
 
       built_nodes[:layers].each_pair do |n, l|
         layer_name = n
+        id = "#{@layers.size + 1}".to_sym
+        @layers.merge!(layer_name => id)
         l.each_value do |v|
           node_style = { label: v[:label], shape: 'plaintext' }
           node_style = override_node_style(node_style, {})
-          @gv.subgraph "cluster_#{layer_name}" do
+          @gv.subgraph "cluster#{id}" do
             global label: layer_name
             global(DEFAULT_STYLE)
             node(v[:id], node_style)
