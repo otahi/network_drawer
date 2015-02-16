@@ -39,7 +39,7 @@ module NetworkDrawer
     def create_nodes
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
-        node_style = DEFAULT_STYLE.merge( label: t[:label], shape: 'plaintext')
+        node_style = DEFAULT_STYLE.merge( label: t[:label], shape: 'box')
         node_style = override_node_style(node_style, @style[:types][t[:type]])
         @gv.node(t[:id], node_style)
       end
@@ -49,7 +49,7 @@ module NetworkDrawer
         id = "#{@layers.size + 1}".to_sym
         @layers.merge!(layer_name => id)
         l.each_value do |v|
-          node_style = DEFAULT_STYLE.merge( label: v[:label], shape: 'plaintext')
+          node_style = DEFAULT_STYLE.merge( label: v[:label], shape: 'box')
           node_style = override_node_style(node_style, @style[:types][v[:type]])
           @gv.subgraph "cluster#{id}" do
             global label: layer_name
@@ -85,16 +85,16 @@ module NetworkDrawer
 
     def build_node_label(opt = {})
       if opt[:ports].empty?
-        label = "<tr><td>#{opt[:name]}</td></tr>"
+        label = "<tr border='1'><td>#{opt[:name]}</td></tr>"
       else
-        label = '<tr>'
+        label = "<tr border='1'>"
         opt[:ports].each_with_index do |p, j|
-          label << "<td port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+          label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
         end
         label << '</tr>'
-        label << "<tr><td colspan=\"#{opt[:ports].size}\">#{opt[:name]}</td></tr>"
+        label << "<tr border='1'><td border='1' colspan=\"#{opt[:ports].size}\">#{opt[:name]}</td></tr>"
       end
-      "<table>#{label}</table>"
+      "<table border='0'>#{label}</table>"
     end
 
     def override_node_style(default, options)
