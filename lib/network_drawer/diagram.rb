@@ -6,7 +6,8 @@ module NetworkDrawer
     TOP_LAYER = :networkdrawertop
     DEFAULT_OPTIONS = {}
     DEFAULT_STYLE = { fontname: 'Helvetica' }
-    DEFAULT_NODE_STYLE = { fontname: 'Helvetica' }
+    DEFAULT_NODE_STYLE = { fontname: 'Helvetica', shape: 'box' }
+    DEFAULT_LINE_STYLE = {}
 
     def self.draw(source, dest_file, options = {})
       dia = new(source, dest_file, options)
@@ -39,8 +40,10 @@ module NetworkDrawer
     def create_nodes
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
-        node_style = DEFAULT_STYLE.merge( label: t[:label], shape: 'box')
-        node_style = override_node_style(node_style, @style[:types][t[:type]])
+        @gv.global DEFAULT_STYLE
+        node_style = { label: t[:label] }
+        node_style =
+          override_style(:node, node_style, @style[:types][t[:type]])
         @gv.node(t[:id], node_style)
       end
 
@@ -49,11 +52,12 @@ module NetworkDrawer
         id = "#{@layers.size + 1}".to_sym
         @layers.merge!(layer_name => id)
         l.each_value do |v|
-          node_style = DEFAULT_STYLE.merge( label: v[:label], shape: 'box')
-          node_style = override_node_style(node_style, @style[:types][v[:type]])
+          node_style = { label: v[:label] }
+          node_style =
+            override_style(:node, node_style, @style[:types][v[:type]])
           @gv.subgraph "cluster#{id}" do
             global label: layer_name
-            global(DEFAULT_STYLE)
+            global DEFAULT_STYLE
             node(v[:id], node_style)
           end
         end
@@ -97,12 +101,6 @@ module NetworkDrawer
       "<table border='0'>#{label}</table>"
     end
 
-    def override_node_style(default, options)
-      return DEFAULT_NODE_STYLE unless default
-      return default unless options
-      DEFAULT_NODE_STYLE.merge(default).merge(options)
-    end
-
     def create_connections
       return if @source[:connections].nil?
       seq = 0
@@ -114,10 +112,27 @@ module NetworkDrawer
 
         from = from_port ? "#{from_id}:p#{from_port}" : from_id
         to = to_port ? "#{to_id}:p#{to_port}" : to_id
+        line_style = override_style(:line, {}, @style[:types][:"#{c[:type]}"])
 
-        @gv.edge "#{from}_#{to}_#{seq}".gsub('/', '').to_sym
+        @gv.edge "#{from}_#{to}_#{seq}".gsub('/', '').to_sym, line_style
         seq += 1
       end
+    end
+
+    def override_style(type, origin, options)
+
+      default =
+        case type
+        when :line
+          DEFAULT_LINE_STYLE
+        when :node
+          DEFAULT_NODE_STYLE
+        else
+          DEFAULT_STYLE
+        end
+      origin = {} unless origin
+      return default.merge(origin) unless options
+      default.merge(origin).merge(options)
     end
   end
 end
