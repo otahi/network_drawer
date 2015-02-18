@@ -1,5 +1,8 @@
 {
     "types": {
-        "LB": { "color": "blue" }
+        "LB": { "style": "rounded,filled,dotted", "fillcolor": "azure" },
+        "HTTP": { "color": "blue" },
+        "SMTP": { "color": "green" },
+        "MYSQL": { "color": "midnightblue" }
     }
 }
