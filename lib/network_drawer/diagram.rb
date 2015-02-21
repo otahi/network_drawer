@@ -43,7 +43,7 @@ module NetworkDrawer
         @gv.global DEFAULT_STYLE
         node_style = { label: t[:label] }
         node_style =
-          override_style(:node, node_style, @style[:types][t[:type]])
+          override_style(:node, node_style, t[:type])
         @gv.node(t[:id], node_style)
       end
 
@@ -54,7 +54,7 @@ module NetworkDrawer
         l.each_value do |v|
           node_style = { label: v[:label] }
           node_style =
-            override_style(:node, node_style, @style[:types][v[:type]])
+            override_style(:node, node_style, v[:type])
           @gv.subgraph "cluster#{id}" do
             global label: layer_name
             global DEFAULT_STYLE
@@ -112,14 +112,14 @@ module NetworkDrawer
 
         from = from_port ? "#{from_id}:p#{from_port}" : from_id
         to = to_port ? "#{to_id}:p#{to_port}" : to_id
-        line_style = override_style(:line, {}, @style[:types][:"#{c[:type]}"])
+        line_style = override_style(:line, {}, :"#{c[:type]}")
 
         @gv.edge "#{from}_#{to}_#{seq}".gsub('/', '').to_sym, line_style
         seq += 1
       end
     end
 
-    def override_style(type, origin, options)
+    def override_style(type, origin, style_type)
 
       default =
         case type
@@ -131,8 +131,10 @@ module NetworkDrawer
           DEFAULT_STYLE
         end
       origin = {} unless origin
-      return default.merge(origin) unless options
-      default.merge(origin).merge(options)
+      return default.merge(origin) unless style_type
+      style = @style[:types][style_type] if @style[:types]
+      style ||= {}
+      default.merge(origin).merge(style)
     end
   end
 end
