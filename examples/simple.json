@@ -2,7 +2,13 @@
     "layers": {
         "Web": {
             "nodes": [
-                { "WebLB":  { "ports": ["80/tcp", "443/tcp"], "type": "LB" } },
+                {
+                    "WebLB": {
+                        "ports": ["80/tcp", "443/tcp"],
+                        "type": "LB",
+                        "url": "https://github.com/otahi/network_drawer/"
+                    }
+                },
                 { "Web001": { "ports": ["80/tcp"] } },
                 { "Web002": { "ports": ["80/tcp"] } },
                 { "Web003": { "ports": ["80/tcp"] } }
