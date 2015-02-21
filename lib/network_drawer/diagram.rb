@@ -68,7 +68,7 @@ module NetworkDrawer
       layer_name = layer.keys.first
       nodes = layer[layer_name][:nodes]
       built_nodes = {}
-      nodes.reverse.each_with_index do |s, i|
+      nodes.each_with_index do |s, i|
         id = "#{@nodes.size + 1}".to_sym
         name = s.keys.first
         ports = s[name][:ports] ? s[name][:ports] : []
