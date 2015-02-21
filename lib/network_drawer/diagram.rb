@@ -5,7 +5,7 @@ module NetworkDrawer
   class Diagram
     TOP_LAYER = :networkdrawertop
     DEFAULT_OPTIONS = {}
-    DEFAULT_STYLE = { fontname: 'Helvetica' }
+    DEFAULT_STYLE = { rankdir: 'TB', fontname: 'Helvetica' }
     DEFAULT_NODE_STYLE = { fontname: 'Helvetica', shape: 'box' }
     DEFAULT_LINE_STYLE = {}
 
@@ -27,8 +27,6 @@ module NetworkDrawer
     end
 
     def draw
-      @gv.global(rankdir: 'TB')
-      @gv.global(DEFAULT_STYLE)
       create_nodes
       create_connections
 
