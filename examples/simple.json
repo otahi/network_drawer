@@ -10,20 +10,14 @@
                     }
                 },
                 { "Web001": { "ports": ["80/tcp"] } },
-                { "Web002": { "ports": ["80/tcp"] } },
-                { "Web003": { "ports": ["80/tcp"] } }
+                { "Web002": { "ports": ["80/tcp"] } }
             ]
         },
         "App": {
             "nodes": [
-                { "AppLB":  { "ports": ["80/tcp", "8080/tcp", "25/tcp"], "type": "LB" } },
-                { "App001": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } },
-                { "App002": { "ports": ["80/tcp", "8080/tcp", "25/tcp"] } }
-            ]
-        },
-        "DB": {
-            "nodes": [
-                { "DB001": { "ports": ["3306/tcp"] } }
+                { "AppLB":  { "ports": ["80/tcp", "25/tcp"], "type": "LB" } },
+                { "App001": { "ports": ["80/tcp", "25/tcp"] } },
+                { "App002": { "ports": ["80/tcp", "25/tcp"] } }
             ]
         }
     },
@@ -37,21 +31,11 @@
         { "from": "Mail Server", "to": "AppLB:25/tcp" , "type": "SMTP" },
         { "from": "WebLB", "to": "Web001:80/tcp", "type": "HTTP"  },
         { "from": "WebLB", "to": "Web002:80/tcp", "type": "HTTP" },
-        { "from": "WebLB", "to": "Web003:80/tcp", "type": "HTTP" },
         { "from": "Web001", "to": "AppLB:80/tcp", "type": "HTTP" },
         { "from": "Web002", "to": "AppLB:80/tcp", "type": "HTTP" },
-        { "from": "Web001", "to": "AppLB:8080/tcp", "type": "HTTP"  },
-        { "from": "Web002", "to": "AppLB:8080/tcp", "type": "HTTP"  },
-        { "from": "Web003", "to": "AppLB:80/tcp", "type": "HTTP"  },
-        { "from": "App001", "to": "AppLB:8080/tcp", "type": "HTTP"  },
-        { "from": "App002", "to": "AppLB:8080/tcp", "type": "HTTP"  },
         { "from": "AppLB", "to": "App001:25/tcp", "type": "SMTP"  },
         { "from": "AppLB", "to": "App001:80/tcp", "type": "HTTP"  },
-        { "from": "AppLB", "to": "App001:8080/tcp", "type": "HTTP"  },
         { "from": "AppLB", "to": "App002:25/tcp", "type": "SMTP"  },
-        { "from": "AppLB", "to": "App002:80/tcp", "type": "HTTP"  },
-        { "from": "AppLB", "to": "App002:8080/tcp", "type": "HTTP"  },
-        { "from": "App001", "to": "DB001:3306/tcp", "type": "MYSQL"  },
-        { "from": "App002", "to": "DB001:3306/tcp", "type": "MYSQL"  }
+        { "from": "AppLB", "to": "App002:80/tcp", "type": "HTTP"  }
     ]
 }

@@ -14,62 +14,40 @@ digraph simple {
     fontname="Helvetica";
     5[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td></tr><tr border='1'><td border='1' colspan="1">Web002</td></tr></table>>,tooltip="Web002",URL=""];
   }
-  subgraph cluster1 {
-    label="Web";
+  subgraph cluster3 {
+    label="App";
     fontname="Helvetica";
-    6[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td></tr><tr border='1'><td border='1' colspan="1">Web003</td></tr></table>>,tooltip="Web003",URL=""];
+    6[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="2">AppLB</td></tr></table>>,tooltip="AppLB",URL="",style="rounded,filled,dotted",fillcolor="azure"];
   }
   subgraph cluster3 {
     label="App";
     fontname="Helvetica";
-    7[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p8080tcp">8080/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="3">AppLB</td></tr></table>>,tooltip="AppLB",URL="",style="rounded,filled,dotted",fillcolor="azure"];
+    7[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="2">App001</td></tr></table>>,tooltip="App001",URL=""];
   }
   subgraph cluster3 {
     label="App";
     fontname="Helvetica";
-    8[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p8080tcp">8080/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="3">App001</td></tr></table>>,tooltip="App001",URL=""];
-  }
-  subgraph cluster3 {
-    label="App";
-    fontname="Helvetica";
-    9[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p8080tcp">8080/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="3">App002</td></tr></table>>,tooltip="App002",URL=""];
-  }
-  subgraph cluster4 {
-    label="DB";
-    fontname="Helvetica";
-    10[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p3306tcp">3306/tcp</td></tr><tr border='1'><td border='1' colspan="1">DB001</td></tr></table>>,tooltip="DB001",URL=""];
+    8[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td border='1' port="p80tcp">80/tcp</td><td border='1' port="p25tcp">25/tcp</td></tr><tr border='1'><td border='1' colspan="2">App002</td></tr></table>>,tooltip="App002",URL=""];
   }
   rankdir="TB";
   fontname="Helvetica";
   1[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td>Browser</td></tr></table>>,tooltip="Browser",URL=""];
   2[fontname="Helvetica",shape="box",label=<<table border='0'><tr border='1'><td>Mail Server</td></tr></table>>,tooltip="Mail Server",URL=""];
   3;
-  7;
+  6;
   4;
   5;
-  6;
+  7;
   8;
-  9;
-  10;
   1 -> 3:p80tcp[color="blue"];
   1 -> 3:p443tcp;
-  2 -> 7:p25tcp[color="green"];
+  2 -> 6:p25tcp[color="green"];
   3 -> 4:p80tcp[color="blue"];
   3 -> 5:p80tcp[color="blue"];
-  3 -> 6:p80tcp[color="blue"];
-  4 -> 7:p80tcp[color="blue"];
-  5 -> 7:p80tcp[color="blue"];
-  4 -> 7:p8080tcp[color="blue"];
-  5 -> 7:p8080tcp[color="blue"];
+  4 -> 6:p80tcp[color="blue"];
+  5 -> 6:p80tcp[color="blue"];
+  6 -> 7:p25tcp[color="green"];
   6 -> 7:p80tcp[color="blue"];
-  8 -> 7:p8080tcp[color="blue"];
-  9 -> 7:p8080tcp[color="blue"];
-  7 -> 8:p25tcp[color="green"];
-  7 -> 8:p80tcp[color="blue"];
-  7 -> 8:p8080tcp[color="blue"];
-  7 -> 9:p25tcp[color="green"];
-  7 -> 9:p80tcp[color="blue"];
-  7 -> 9:p8080tcp[color="blue"];
-  8 -> 10:p3306tcp[color="midnightblue"];
-  9 -> 10:p3306tcp[color="midnightblue"];
+  6 -> 8:p25tcp[color="green"];
+  6 -> 8:p80tcp[color="blue"];
 }
