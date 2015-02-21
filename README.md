@@ -2,6 +2,8 @@
 
 A network diagram drawer with json.
 
+[![Gem Version](https://badge.fury.io/rb/network_drawer.svg)](http://badge.fury.io/rb/network_drawer)
+
 ## Installation
 
 Ensure you can use [Graphviz](http://www.graphviz.org/), before installing network_drawer,
