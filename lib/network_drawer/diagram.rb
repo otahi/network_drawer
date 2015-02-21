@@ -41,7 +41,7 @@ module NetworkDrawer
       built_nodes = build_nodes(TOP_LAYER => @source)
       built_nodes[TOP_LAYER].each_value do |t|
         @gv.global DEFAULT_STYLE
-        node_style = { label: t[:label] }
+        node_style = { label: t[:label], URL: t[:url] }
         node_style =
           override_style(:node, node_style, t[:type])
         @gv.node(t[:id], node_style)
@@ -52,7 +52,7 @@ module NetworkDrawer
         id = "#{@layers.size + 1}".to_sym
         @layers.merge!(layer_name => id)
         l.each_value do |v|
-          node_style = { label: v[:label] }
+          node_style = { label: v[:label], URL: v[:url] }
           node_style =
             override_style(:node, node_style, v[:type])
           @gv.subgraph "cluster#{id}" do
@@ -72,9 +72,10 @@ module NetworkDrawer
         id = "#{@nodes.size + 1}".to_sym
         name = s.keys.first
         ports = s[name][:ports] ? s[name][:ports] : []
+        url = s[name][:url] ? s[name][:url] : nil
         label = build_node_label(name: name, ports: ports)
         type = s[name][:type] ? s[name][:type].to_sym : nil
-        node = { id: id, label: label, ports: ports, type: type }
+        node = { id: id, label: label, ports: ports, type: type, url: url }
         built_nodes.merge!(name => node)
         @nodes.merge!(name => node)
       end if nodes
