@@ -3,9 +3,16 @@ require 'bundler/gem_tasks'
 task default: :update
 
 task :update do
+  env = {
+    'BUNDLE_GEMFILE' => nil,
+    'GEM_HOME' => nil
+  }
+
   %w(png svg).each do |f|
-    system('network_drawer', 'draw', 'example/simple.json',
-           '-s', 'examples/simple_style.json',
-           '-f', f)
+    command =  'bundle exec bin/network_drawer '
+    command << 'draw examples/simple.json '
+    command << "-s examples/simple_style.json -f #{f}"
+
+    system(env, command)
   end
 end
