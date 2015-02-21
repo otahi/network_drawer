@@ -32,7 +32,7 @@ module NetworkDrawer
       create_nodes
       create_connections
 
-      @gv.save @dest_file, :svg
+      @gv.save @dest_file, @options[:format]
     end
 
     private
