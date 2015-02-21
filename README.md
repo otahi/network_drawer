@@ -6,15 +6,15 @@ A network diagram drawer with json.
 
 ## Installation
 
-Ensure you can use [Graphviz](http://www.graphviz.org/), before installing network_drawer,
+Ensure you can use [Graphviz](http://www.graphviz.org/), before installing network_drawer.
 
-You can install Graphviz as follow
+You can install Graphviz as follow.
 ```
 # Mac OS X with brew
 brew install graphviz
 
 # CentOS
-yum -y install graphviz
+yum install graphviz
 
 # Ubuntu
 apt-get install graphviz
@@ -36,15 +36,15 @@ Or install it yourself as:
 
 ## Usage
 
-You can draw a network diagram:
+You can draw a network diagram with a JSON file with SVG format:
 
     $ bundle exec network_drawer draw examples/simple.json
 
-You can draw a network diagram with specified style and png format:
+You can draw a network diagram with specified style:
 
     $ bundle exec network_drawer draw examples/simple.json -s examples/simple_style.json
 
-You can draw a network diagram with specified style and png format:
+You can draw a network diagram with png format:
 
     $ bundle exec network_drawer draw examples/simple.json -f png
 
