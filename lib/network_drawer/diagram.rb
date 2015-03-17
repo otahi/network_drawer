@@ -5,13 +5,10 @@ module NetworkDrawer
   class Diagram
     TOP_LAYER = :networkdrawertop
     DEFAULT_OPTIONS = {}
-    DEFAULT_STYLE = { fontname: 'Helvetica' }
-    DEFAULT_NODE_STYLE = { fontname: 'Helvetica', shape: 'box' }
-    DEFAULT_LINE_STYLE = {}
 
     def self.draw(source, dest_file, options = {})
-      dia = new(source, dest_file, options)
-      dia.draw
+      diagram = new(source, dest_file, options)
+      diagram.draw
     end
 
     def initialize(source, dest_file, options = {})
@@ -22,123 +19,101 @@ module NetworkDrawer
         File.basename(@dest_file, '.*')
       @nodes = {}
       @layers = {}
+      @connections = []
       @style = options[:style]
       @gv = Gviz.new(@title)
     end
 
     def draw
-      @gv.global(rankdir: 'TB')
-      @gv.global(DEFAULT_STYLE)
-      create_nodes
-      create_connections
+      @layers = create_layers
+      @connections = create_connections
+      draw_elements
 
       @gv.save @dest_file, @options[:format]
     end
 
     private
 
-    def create_nodes
-      built_nodes = build_nodes(TOP_LAYER => @source)
-      built_nodes[TOP_LAYER].each_value do |t|
-        @gv.global DEFAULT_STYLE
-        node_style = { label: t[:label], tooltip: t[:name], URL: t[:url] }
-        node_style =
-          override_style(:node, node_style, t[:type])
-        @gv.node(t[:id], node_style)
+    def draw_elements
+      code = @layers.to_code
+      @connections.each do |c|
+        code << c.to_code
       end
-
-      built_nodes[:layers].each_pair do |n, l|
-        layer_name = n
-        id = "#{@layers.size + 1}".to_sym
-        @layers.merge!(layer_name => id)
-        l.each_value do |v|
-          node_style = { label: v[:label], tooltip: v[:name], URL: v[:url] }
-          node_style =
-            override_style(:node, node_style, v[:type])
-          @gv.subgraph "cluster#{id}" do
-            global label: layer_name
-            global DEFAULT_STYLE
-            node(v[:id], node_style)
-          end
-        end
-      end
+      @gv.graph(&eval("proc {#{code}}"))
     end
 
-    def build_nodes(layer)
-      layer_name = layer.keys.first
-      nodes = layer[layer_name][:nodes]
-      built_nodes = {}
-      nodes.each_with_index do |s, i|
-        id = "#{@nodes.size + 1}".to_sym
-        name = s.keys.first
-        ports = s[name][:ports] ? s[name][:ports] : []
-        url = s[name][:url] ? s[name][:url] : nil
-        label = build_node_label(name: name, ports: ports)
-        type = s[name][:type] ? s[name][:type].to_sym : nil
-        node = {
-          id: id, name: name, label: label,
-          ports: ports, type: type, url: url
-        }
-        built_nodes.merge!(name => node)
-        @nodes.merge!(name => node)
-      end if nodes
-
-      layers = layer[layer_name][:layers]
-      built_layers = {}
-      layers.each_pair do |k, v|
-        built_layers.merge!(build_nodes(k => v))
-      end if layers
-      built_nodes = { layer_name => built_nodes, layers: built_layers }
+    def create_layers(name = TOP_LAYER, source = @source)
+      return nil unless source && source.is_a?(Hash)
+      layer = Element::Layer.new(source, @style[:types])
+      layer.name = name
+      layer.layers = create_sub_layers(source)
+      layer.nodes = create_nodes(source)
+      layer
     end
 
-    def build_node_label(opt = {})
-      if opt[:ports].empty?
-        label = "<tr border='1'><td>#{opt[:name]}</td></tr>"
-      else
-        label = "<tr border='1'>"
-        opt[:ports].each_with_index do |p, j|
-          label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
-        end
-        label << '</tr>'
-        label << "<tr border='1'><td border='1' colspan=\"#{opt[:ports].size}\">#{opt[:name]}</td></tr>"
+    def create_sub_layers(source)
+      return nil unless source && source[:layers]
+      sub_layers = []
+      source[:layers].each do |l|
+        return nil unless l.is_a?(Hash)
+        name = l.keys.first
+        src = l[name]
+        sub_layer = create_layers(name, src) if src
+        sub_layers << sub_layer if sub_layer
       end
-      "<table border='0'>#{label}</table>"
+      sub_layers
+    end
+
+    def create_nodes(source)
+      return nil unless source && source[:nodes]
+      nodes = []
+      source[:nodes].each do |n|
+        return nil unless n.is_a?(Hash)
+        node = Element::Node.new(n.values.first, @style[:types])
+        node.name = n.keys.first
+        @nodes[node.name] = node.id
+        nodes << node
+      end
+      nodes
     end
 
     def create_connections
-      return if @source[:connections].nil?
-      seq = 0
+      return unless @source[:connections]
+      connections = []
       @source[:connections].each do |c|
-        from_name, from_port  = c[:from].to_s.split(':')
-        to_name, to_port = c[:to].to_s.split(':')
-        from_id = @nodes[from_name.to_sym][:id]
-        to_id = @nodes[to_name.to_sym][:id]
+        from_name, from_port  = c[:from].split(':')
+        to_name, to_port = c[:to].split(':')
 
-        from = from_port ? "#{from_id}:p#{from_port}" : from_id
-        to = to_port ? "#{to_id}:p#{to_port}" : to_id
-        line_style = override_style(:line, {}, :"#{c[:type]}")
+        from_name = from_name.to_sym
+        to_name   = to_name.to_sym
+        return unless node_exist?(from_name) && node_exist?(to_name)
 
-        @gv.edge "#{from}_#{to}_#{seq}".gsub('/', '').to_sym, line_style
-        seq += 1
+        connection = Element::Connection.new({}, @style[:types])
+        c.each_pair { |k, v| connection[k.to_sym] = v }
+
+        from = from_port ? "#{@nodes[from_name]}:p#{from_port}" : @nodes[from_name]
+        to = to_port ? "#{@nodes[to_name]}:p#{to_port}" : @nodes[to_name]
+
+        connection.from = from
+        connection.to = to
+        connections << connection
+      end
+      connections
+    end
+
+    def node_exist?(name)
+      return false unless name
+      if @nodes[name]
+        true
+      else
+        puts "No #{name} exists"
+        false
       end
     end
 
-    def override_style(type, origin, style_type)
-
-      default =
-        case type
-        when :line
-          DEFAULT_LINE_STYLE
-        when :node
-          DEFAULT_NODE_STYLE
-        else
-          DEFAULT_STYLE
-        end
-      origin = {} unless origin
-      return default.merge(origin) unless style_type
-      style = @style[:types][style_type] if @style[:types]
-      style ||= {}
-      default.merge(origin).merge(style)
+    def node_id(name)
+      return nil unless node_exist?(name)
+      @nodes[name.to_sym]
     end
   end
 end
