@@ -14,7 +14,7 @@ module NetworkDrawer
       def to_code
         style = style(self.type).dup
         style.merge!(self.to_hash)
-        cid = "#{self.from}_#{self.to}_#{self.seq}".gsub('/', '').to_sym
+        cid = "#{self.from}_#{self.to}_#{self.id}".gsub('/', '').to_sym
         "edge(:\"#{cid}\", #{style})\n"
       end
     end
