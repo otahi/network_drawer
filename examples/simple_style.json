@@ -1,5 +1,6 @@
 {
     "types": {
+        "WEB": { "style": "rounded,filled,dotted", "fillcolor": "azure" },
         "LB": { "style": "rounded,filled,dotted", "fillcolor": "azure" },
         "HTTP": { "color": "blue" },
         "SMTP": { "color": "green" }
