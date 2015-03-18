@@ -12,7 +12,8 @@ module NetworkDrawer
                     default: :svg)
     def draw(source_file)
       src = Source.read(source_file)
-      op = { style: Style.read(options[:style]) }
+      op = {}
+      op = { style: Source.read(options[:style]) } if options[:style]
       op.merge!(format: options[:format])
       dest_file = source_file.gsub(File.extname(source_file), '')
       Diagram.draw(src, dest_file, op)
