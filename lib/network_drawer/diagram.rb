@@ -35,10 +35,10 @@ module NetworkDrawer
     private
 
     def draw_elements
-      code = @layers.to_code
+      code = @layers.to_code if @layers
       @connections.each do |c|
         code << c.to_code
-      end
+      end if @connections
       @gv.graph(&eval("proc {#{code}}"))
     end
 
