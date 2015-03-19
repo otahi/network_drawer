@@ -12,22 +12,26 @@
                     },
                     { "Web001": { "ports": ["80/tcp"] } },
                     { "Web002": { "ports": ["80/tcp"] } }
-                ]
-            },
-            "layers": [
-                {
-                    "Image": {
-                        "nodes": {
-                            "ImageWeb001": {
-                                "ports": ["80/tcp"]
-                            },
-                            "ImageWeb002": {
-                                "ports": ["80/tcp"]
-                            } 
+                ],
+                "layers": [
+                    {
+                        "Image": {
+                            "nodes": [
+                                {
+                                    "ImageWeb001": {
+                                        "ports": ["80/tcp"]
+                                    }
+                                },
+                                {
+                                    "ImageWeb002": {
+                                        "ports": ["80/tcp"]
+                                    } 
+                                }
+                            ]
                         }
                     }
-                }
-            ]
+                ]
+            }
         },
         {
             "App": {
