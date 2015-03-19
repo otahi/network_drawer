@@ -48,6 +48,10 @@ You can draw a network diagram with specified style:
 
     $ bundle exec network_drawer draw examples/simple.yml -s examples/simple_style.yml
 
+You can draw a network diagram with specified layout(dot, fdp..):
+
+    $ bundle exec network_drawer draw examples/simple.json -l fdp
+
 You can draw a network diagram with png format:
 
     $ bundle exec network_drawer draw examples/simple.json -f png
