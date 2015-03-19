@@ -29,6 +29,7 @@ module NetworkDrawer
       @connections = create_connections
       draw_elements
 
+      @gv.global(layout: @options[:layout] ? @options[:layout] : :dot)
       @gv.save @dest_file, @options[:format]
     end
 
