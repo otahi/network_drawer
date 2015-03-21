@@ -74,7 +74,7 @@ module NetworkDrawer
         return nil unless n.is_a?(Hash)
         node = Element::Node.new(n.values.first, @style[:types])
         node.name = n.keys.first
-        @nodes[node.name] = node.id
+        @nodes[node.name] = { id: node.id }
         nodes << node
       end
       nodes
@@ -94,8 +94,11 @@ module NetworkDrawer
         connection = Element::Connection.new({}, @style[:types])
         c.each_pair { |k, v| connection[k.to_sym] = v }
 
-        from = from_port ? "#{@nodes[from_name]}:p#{from_port}" : @nodes[from_name]
-        to = to_port ? "#{@nodes[to_name]}:p#{to_port}" : @nodes[to_name]
+        from_name = @nodes[from_name][:id] if @nodes[from_name]
+        to_name =   @nodes[to_name][:id] if @nodes[to_name]
+
+        from = from_port ? "#{from_name}:p#{from_port}" : from_name
+        to = to_port ? "#{to_name}:p#{to_port}" : to_name
 
         connection.from = from
         connection.to = to
@@ -106,7 +109,7 @@ module NetworkDrawer
 
     def node_exist?(name)
       return false unless name
-      if @nodes[name]
+      if @nodes[name] && @nodes[name][:id]
         true
       else
         puts "No #{name} exists"
@@ -116,7 +119,7 @@ module NetworkDrawer
 
     def node_id(name)
       return nil unless node_exist?(name)
-      @nodes[name.to_sym]
+      @nodes[name.to_sym][:id]
     end
   end
 end
