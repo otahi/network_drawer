@@ -5,6 +5,7 @@ module NetworkDrawer
   class Diagram
     TOP_LAYER = :networkdrawertop
     DEFAULT_OPTIONS = {}
+    ELELMENT_KEYS = [:layers, :nodes, :connections]
 
     def self.draw(source, dest_file, options = {})
       diagram = new(source, dest_file, options)
@@ -12,7 +13,7 @@ module NetworkDrawer
     end
 
     def initialize(source, dest_file, options = {})
-      @source = source
+      @source = source ? source : {}
       @dest_file = dest_file
       @options = DEFAULT_OPTIONS.merge(options)
       @title = @options[:title] ? @options[:title] :
@@ -30,6 +31,7 @@ module NetworkDrawer
       draw_elements
 
       @gv.global(layout: @options[:layout] ? @options[:layout] : :dot)
+      @gv.global(@source.dup.delete_if { |k, _| ELELMENT_KEYS.include?(k) })
       @gv.save @dest_file, @options[:format]
     end
 
