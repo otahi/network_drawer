@@ -22,12 +22,12 @@ module NetworkDrawer
       private
 
       def build_label
-        num_column = [num_ports, num_modules, 1].max
         label = ''
 
         label << port_label
         if [num_ports, num_modules].max > 0
-          label << "<tr border='1'><td border='1' colspan=\"#{num_column}\">#{self.name}</td></tr>"
+          label << "<tr border='1'><td border='1'"
+          label << " colspan=\"#{num_columns}\">#{self.name}</td></tr>"
         else
           label << "<tr border='0'><td border='0'>#{self.name}</td></tr>"
         end
@@ -40,8 +40,9 @@ module NetworkDrawer
         label = ''
         if num_ports > 0
           label << "<tr border='1'>"
-          self.ports.each_with_index do |p, j|
+          self.ports.each_with_index do |p, i|
             label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+            label << row_separator(i, num_ports)
           end
           label << '</tr>'
         end
@@ -52,12 +53,30 @@ module NetworkDrawer
         label = ''
         if num_modules > 0
           label << "<tr border='1'>"
-          self.modules.each_with_index do |p, j|
+          self.modules.each_with_index do |p, i|
             label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+            label << row_separator(i, num_modules)
           end
           label << '</tr>'
         end
         label
+      end
+
+      def row_separator(index, size)
+        return '' unless self.max_column && self.max_column.respond_to?(:to_i)
+        if ((index + 1) % self.max_column == 0) && index + 1 < size
+          "</tr><tr border='1'>"
+        else
+          ''
+        end
+      end
+
+      def num_columns
+        number = [num_ports, num_modules, 1].max
+        if self.max_column && self.max_column.respond_to?(:to_i)
+          number = [self.max_column, number].min
+        end
+        number
       end
 
       def num_ports
