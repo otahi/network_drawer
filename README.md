@@ -70,66 +70,96 @@ You can describe diagram with JSON.
 
 You can describe diagram as follows:
 
-
-```json
-{
-    "layers": {
-        "Web": {
-            "nodes": [
-                {
-                    "WebLB": {
-                        "ports": ["80/tcp", "443/tcp"],
-                        "type": "LB",
-                        "url": "https://github.com/otahi/network_drawer/"
-                    }
-                },
-                { "Web001": { "ports": ["80/tcp"] } },
-                { "Web002": { "ports": ["80/tcp"] } }
-            ]
-        },
-        "App": {
-            "nodes": [
-                { "AppLB":  { "ports": ["80/tcp", "25/tcp"], "type": "LB" } },
-                { "App001": { "ports": ["80/tcp", "25/tcp"] } },
-                { "App002": { "ports": ["80/tcp", "25/tcp"] } }
-            ]
-        }
-    },
-    "nodes": [
-        { "Browser": {}, "type": "Client" },
-        { "Mail Server": {}, "type": "Client" }
-    ],
-    "connections": [
-        { "from": "Browser", "to": "WebLB:80/tcp", "type": "HTTP" },
-        { "from": "Browser", "to": "WebLB:443/tcp" },
-        { "from": "Mail Server", "to": "AppLB:25/tcp" , "type": "SMTP" },
-        { "from": "WebLB", "to": "Web001:80/tcp", "type": "HTTP"  },
-        { "from": "WebLB", "to": "Web002:80/tcp", "type": "HTTP" },
-        { "from": "Web001", "to": "AppLB:80/tcp", "type": "HTTP" },
-        { "from": "Web002", "to": "AppLB:80/tcp", "type": "HTTP" },
-        { "from": "AppLB", "to": "App001:25/tcp", "type": "SMTP"  },
-        { "from": "AppLB", "to": "App001:80/tcp", "type": "HTTP"  },
-        { "from": "AppLB", "to": "App002:25/tcp", "type": "SMTP"  },
-        { "from": "AppLB", "to": "App002:80/tcp", "type": "HTTP"  }
-    ]
-}
-
+[simple.yml](examples/simple.yml)
+```yaml
+layers:
+- Web:
+    nodes:
+    - WebLB:
+        ports:
+        - 80/tcp
+        - 443/tcp
+        type: LB
+        url: https://github.com/otahi/network_drawer/
+    - Web001:
+        ports:
+        - 80/tcp
+    - Web002:
+        ports:
+        - 80/tcp
+- App:
+    nodes:
+    - AppLB:
+        ports:
+        - 80/tcp
+        - 25/tcp
+        type: LB
+    - App001:
+        ports:
+        - 80/tcp
+        - 25/tcp
+    - App002:
+        ports:
+        - 80/tcp
+        - 25/tcp
+nodes:
+- Browser:
+  type: Client
+- Mail Server:
+  type: Client
+connections:
+- from: Browser
+  to: WebLB:80/tcp
+  type: HTTP
+- from: Browser
+  to: WebLB:443/tcp
+- from: Mail Server
+  to: AppLB:25/tcp
+  type: SMTP
+- from: WebLB
+  to: Web001:80/tcp
+  type: HTTP
+- from: WebLB
+  to: Web002:80/tcp
+  type: HTTP
+- from: Web001
+  to: AppLB:80/tcp
+  type: HTTP
+- from: Web002
+  to: AppLB:80/tcp
+  type: HTTP
+- from: AppLB
+  to: App001:25/tcp
+  type: SMTP
+- from: AppLB
+  to: App001:80/tcp
+  type: HTTP
+- from: AppLB
+  to: App002:25/tcp
+  type: SMTP
+- from: AppLB
+  to: App002:80/tcp
+  type: HTTP
 ```
 
 ### Style
 
 You can specify your style for nodes or edges with [Graphviz attributes](http://www.graphviz.org/content/attrs).
 
-```json
-{
-    "types": {
-        "LB": { "style": "rounded,filled,dotted", "fillcolor": "azure" },
-        "HTTP": { "color": "blue" },
-        "SMTP": { "color": "green" }
-    }
-}
+[simple_style.yml](examples/simple_style.yml)
+```yaml
+types: 
+  WEB: 
+    style: rounded,filled,dotted
+    fillcolor: azure
+  LB: 
+    style: rounded,filled,dotted
+    fillcolor: azure
+  HTTP: 
+    color: blue
+  SMTP: 
+    color: green
 ```
-
 
 ## Contributing
 
