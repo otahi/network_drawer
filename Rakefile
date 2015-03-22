@@ -10,8 +10,8 @@ task :update do
 
   %w(png svg).each do |f|
     command =  'bundle exec bin/network_drawer '
-    command << 'draw examples/simple.json '
-    command << "-s examples/simple_style.json -f #{f}"
+    command << 'draw examples/simple.yml '
+    command << "-s examples/simple_style.yml -f #{f}"
 
     system(env, command)
   end
