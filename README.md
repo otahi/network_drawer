@@ -1,6 +1,6 @@
 # NetworkDrawer
 
-A network diagram drawer with json or yaml.
+A network diagram drawer with YAML or JSON.
 
 [![Gem Version](https://badge.fury.io/rb/network_drawer.svg)](http://badge.fury.io/rb/network_drawer)
 
@@ -36,27 +36,27 @@ Or install it yourself as:
 
 ## Usage
 
-You can draw a network diagram with a JSON or YAML file with SVG format:
-
-    $ bundle exec network_drawer draw examples/simple.json
+You can draw a network diagram with a YAML or JSONfile with SVG format:
 
     $ bundle exec network_drawer draw examples/simple.yml
 
-You can draw a network diagram with specified style:
+    $ bundle exec network_drawer draw examples/simple.json
 
-    $ bundle exec network_drawer draw examples/simple.json -s examples/simple_style.json
+You can draw a network diagram with specified style:
 
     $ bundle exec network_drawer draw examples/simple.yml -s examples/simple_style.yml
 
+    $ bundle exec network_drawer draw examples/simple.json -s examples/simple_style.json
+
 You can draw a network diagram with specified layout(dot, fdp..):
 
-    $ bundle exec network_drawer draw examples/simple.json -l fdp
+    $ bundle exec network_drawer draw examples/simple.yml -l fdp
 
 You can draw a network diagram with png format:
 
-    $ bundle exec network_drawer draw examples/simple.json -f png
+    $ bundle exec network_drawer draw examples/simple.yml -f png
 
-Then You will get a network diagram.
+Then You will get a network diagram. See more [Gallery](GALLERY.md)
 
 [sample diagram(SVG)](examples/simple.svg)
 
@@ -64,7 +64,7 @@ Then You will get a network diagram.
 
 ## How to describe
 
-You can describe diagram with JSON.
+You can describe diagram with YAML or JSON.
 
 ### Network diagram
 
