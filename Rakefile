@@ -8,11 +8,13 @@ task :update do
     'GEM_HOME' => nil
   }
 
-  %w(png svg).each do |f|
-    command =  'bundle exec bin/network_drawer '
-    command << 'draw examples/simple.yml '
-    command << "-s examples/simple_style.yml -f #{f}"
+  %w(simple).each do |name|
+    %w(png svg).each do |f|
+      command =  'bundle exec bin/network_drawer '
+      command << "draw examples/#{name}.yml "
+      command << "-s examples/#{name}_style.yml -f #{f}"
 
-    system(env, command)
+      system(env, command)
+    end
   end
 end
