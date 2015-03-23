@@ -4,7 +4,7 @@ module NetworkDrawer
   module Element
     # Replesent of connection
     class Connection < Element
-      DEFAULT_STYLE = {}
+      DEFAULT_STYLE = { fontname: 'Helvetica' }
 
       def initialize(initial_values = {}, style = {})
         super
