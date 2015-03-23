@@ -9,11 +9,11 @@
 <g id="0" class="graph" transform="scale(1 1) rotate(0) translate(4 456)">
 <title>simple</title>
 <polygon fill="white" stroke="white" points="-4,4 -4,-456 332,-456 332,4 -4,4"/>
-<g id="1" class="cluster"><title>cluster_Web</title>
+<g id="1" class="cluster"><title>cluster_1</title>
 <polygon fill="none" stroke="black" points="105,-212 105,-408 295,-408 295,-212 105,-212"/>
 <text text-anchor="middle" x="200" y="-390" font-family="Helvetica,sans-Serif" font-size="14.00">Web</text>
 </g>
-<g id="2" class="cluster"><title>cluster_App</title>
+<g id="2" class="cluster"><title>cluster_2</title>
 <polygon fill="none" stroke="black" points="63,-8 63,-204 320,-204 320,-8 63,-8"/>
 <text text-anchor="middle" x="191.5" y="-186" font-family="Helvetica,sans-Serif" font-size="14.00">App</text>
 </g>
