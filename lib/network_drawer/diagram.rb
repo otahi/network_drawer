@@ -21,7 +21,7 @@ module NetworkDrawer
       @nodes = {}
       @layers = {}
       @connections = []
-      @style = options[:style]
+      @style = options[:style] ? options[:style] : {}
       @gv = Gviz.new(@title)
     end
 
