@@ -33,7 +33,7 @@ module NetworkDrawer
           EOF
         else
           code = <<-EOF
-            subgraph "cluster_#{self.name}" do
+            subgraph "cluster_#{self.id}" do
               global label: "#{label}"
               global(#{style})
               #{node_code}
