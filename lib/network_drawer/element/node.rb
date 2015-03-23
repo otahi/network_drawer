@@ -63,8 +63,8 @@ module NetworkDrawer
       end
 
       def row_separator(index, size)
-        return '' unless self.max_column && self.max_column.respond_to?(:to_i)
-        if ((index + 1) % self.max_column == 0) && index + 1 < size
+        return '' unless self.max_column && self.max_column.to_i > 0
+        if ((index + 1) % self.max_column.to_i == 0) && index + 1 < size
           "</tr><tr border='1'>"
         else
           ''
