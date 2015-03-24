@@ -14,8 +14,10 @@ module NetworkDrawer
       def to_code
         style = style(self.type).dup
         style.merge!(self.to_hash)
+        self.max_column = style[:max_column]
         style.merge!(label: build_label, tooltip: self.name, URL: self.url )
-        style.merge!(ports: nil)
+        style.delete(:ports)
+        style.delete(:modules)
         "node(:\"#{self.id}\", #{style})"
       end
 
