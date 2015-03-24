@@ -43,7 +43,7 @@ module NetworkDrawer
         if num_ports > 0
           label << "<tr border='1'>"
           self.ports.each_with_index do |p, i|
-            label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+            label << "<td border='1' port=\"p#{p.to_s.gsub('/', '')}\">#{p}</td>"
             label << row_separator(i, num_ports)
           end
           label << '</tr>'
@@ -56,7 +56,7 @@ module NetworkDrawer
         if num_modules > 0
           label << "<tr border='1'>"
           self.modules.each_with_index do |p, i|
-            label << "<td border='1' port=\"p#{p.gsub('/', '')}\">#{p}</td>"
+            label << "<td border='1' port=\"p#{p.to_s.gsub('/', '')}\">#{p}</td>"
             label << row_separator(i, num_modules)
           end
           label << '</tr>'
