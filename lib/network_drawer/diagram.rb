@@ -21,6 +21,7 @@ module NetworkDrawer
       @nodes = {}
       @layers = {}
       @connections = []
+      @rankings = {}
       @style = options[:style] ? options[:style] : {}
       @gv = Gviz.new(@title)
     end
@@ -42,6 +43,19 @@ module NetworkDrawer
       @connections.each do |c|
         code << c.to_code
       end if @connections
+
+      if @rankings.size > 0
+        sorted_rankings = @rankings.sort
+        sorted_rankings.each_with_index do |r, i|
+          r[1].each do |n|
+            if i + 1 < sorted_rankings.size
+              @gv.route(n => sorted_rankings[i+1][1])
+            end
+          end
+          @gv.rank(:same, *([rank_id] + r[1]))
+        end
+      end
+
       @gv.graph(&eval("proc {#{code}}"))
     end
 
@@ -75,6 +89,14 @@ module NetworkDrawer
         node = Element::Node.new(n.values.first, @style[:types])
         node.name = n.keys.first
         @nodes[node.name] = { id: node.id }
+        ranking = node.ranking.to_i
+        unless ranking.nil?
+          if @rankings[ranking]
+            @rankings[ranking] += [node.id]
+          else
+            @rankings[ranking] = [node.id]
+          end
+        end
         nodes << node
       end
       nodes
