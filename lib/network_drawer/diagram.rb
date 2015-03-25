@@ -32,6 +32,7 @@ module NetworkDrawer
       draw_elements
 
       @gv.global(layout: @options[:layout] ? @options[:layout] : :dot)
+      @gv.global(newrank: true) if @rankings.size > 0
       @gv.global(@source.dup.delete_if { |k, _| ELELMENT_KEYS.include?(k) })
       @gv.save @dest_file, @options[:format]
     end
@@ -46,13 +47,16 @@ module NetworkDrawer
 
       if @rankings.size > 0
         sorted_rankings = @rankings.sort
+        rank_ids = []
         sorted_rankings.each_with_index do |r, i|
-          r[1].each do |n|
-            if i + 1 < sorted_rankings.size
-              @gv.route(n => sorted_rankings[i+1][1])
-            end
-          end
+          rank_id = (@nodes.size + i)
+          rank_ids << rank_id
           @gv.rank(:same, *([rank_id] + r[1]))
+        end
+        rank_ids.each_with_index do |r, i|
+          @gv.node(r.to_s.to_sym, style: :invis)
+          edge_id = "#{rank_ids[i]}_#{rank_ids[i + 1]}".to_sym
+          @gv.edge(edge_id, style: :invis) if i < rank_ids.size - 1
         end
       end
 
@@ -90,7 +94,7 @@ module NetworkDrawer
         node.name = n.keys.first
         @nodes[node.name] = { id: node.id }
         ranking = node.ranking.to_i
-        unless ranking.nil?
+        unless node.ranking.nil?
           if @rankings[ranking]
             @rankings[ranking] += [node.id]
           else
