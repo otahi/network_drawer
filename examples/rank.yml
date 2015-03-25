@@ -1,0 +1,35 @@
+layers:
+- Web:
+    nodes:
+    - WebLB:
+        ranking: 1
+- App:
+    nodes:
+    - AppLB:
+        ranking: 3
+    - App001:
+        ranking: 4
+    - App002:
+        ranking: 4
+nodes:
+- Browser:
+  ranking: 0
+- Mail Server:
+  ranking: 0
+connections:
+- from: Browser
+  to: WebLB
+- from: Browser
+  to: WebLB
+- from: Mail Server
+  to: AppLB
+- from: WebLB
+  to: AppLB
+- from: AppLB
+  to: App001
+- from: AppLB
+  to: App001
+- from: AppLB
+  to: App002
+- from: AppLB
+  to: App002

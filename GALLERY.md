@@ -6,3 +6,9 @@
 
 ![sample diagram(PNG)](examples/simple.png)
 
+## Rank
+
+[rank.yml](examples/rank.yml)
+
+![rank diagram(PNG)](examples/rank.png)
+
