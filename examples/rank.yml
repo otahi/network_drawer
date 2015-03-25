@@ -13,9 +13,9 @@ layers:
         ranking: 4
 nodes:
 - Browser:
-  ranking: 0
+    ranking: 0
 - Mail Server:
-  ranking: 0
+    ranking: 0
 connections:
 - from: Browser
   to: WebLB
