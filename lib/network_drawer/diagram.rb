@@ -45,20 +45,7 @@ module NetworkDrawer
         code << c.to_code
       end if @connections
 
-      if @rankings.size > 0
-        sorted_rankings = @rankings.sort
-        rank_ids = []
-        sorted_rankings.each_with_index do |r, i|
-          rank_id = (@nodes.size + i)
-          rank_ids << rank_id
-          @gv.rank(:same, *([rank_id] + r[1]))
-        end
-        rank_ids.each_with_index do |r, i|
-          @gv.node(r.to_s.to_sym, style: :invis)
-          edge_id = "#{rank_ids[i]}_#{rank_ids[i + 1]}".to_sym
-          @gv.edge(edge_id, style: :invis) if i < rank_ids.size - 1
-        end
-      end
+      rank_nodes
 
       @gv.graph(&eval("proc {#{code}}"))
     end
@@ -131,6 +118,22 @@ module NetworkDrawer
         connections << connection
       end
       connections
+    end
+
+    def rank_nodes
+      return if @rankings.size == 0
+      sorted_rankings = @rankings.sort
+      rank_ids = []
+      sorted_rankings.each_with_index do |r, i|
+        rank_id = (@nodes.size + i)
+        rank_ids << rank_id
+        @gv.rank(:same, *([rank_id] + r[1]))
+      end
+      rank_ids.each_with_index do |r, i|
+        @gv.node(r.to_s.to_sym, style: :invis)
+        edge_id = "#{rank_ids[i]}_#{rank_ids[i + 1]}".to_sym
+        @gv.edge(edge_id, style: :invis) if i < rank_ids.size - 1
+      end
     end
 
     def node_exist?(name)
